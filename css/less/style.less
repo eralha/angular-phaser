@@ -1,0 +1,145 @@
+@import "_normalize.less";
+@import "remixins.less";
+
+@import "_utils.less";
+@import "_grid.less";
+@import "_icons.less";
+@import "_config.less";
+
+
+/* styles */
+body, html{
+  font-size: 62.5%;
+  color: #fff;
+  background-color: #000;
+}
+
+.main { width: 100%; }
+.warper {
+  width: 1200px;
+  font-size: 16px;
+  color: #fff;
+  .m_center;
+}
+@media only screen and (max-width: 1199px){ 
+  .warper { width: 96%; }
+}
+@media only screen and (max-width: @desktop){ 
+  .warper { width: 96%; }
+}
+@media only screen and (max-width: @ipadPortrait){ 
+  .warper { width: 92%; }
+}
+@media only screen and (max-width: @mobile){ 
+  .warper--interior .container_12 > .grid_3,
+  .warper--interior .container_12 > .grid_9 { width: @grid_12 !important; }
+}
+
+.game__canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.angular-ui {
+  position: absolute;
+  z-index: 2;
+}
+
+.bottom__controlls {
+  position: fixed;
+  z-index: 4;
+  bottom: 0;
+  width: 100%;
+  height: 55px;
+  background-color: #fff;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  .controll__item {
+    height: 55px;
+    line-height: 55px;
+    font-size: 24px;
+    vertical-align: middle;
+    text-align: center;
+    -webkit-flex-grow: 1;
+    -moz-box-grow: 1;
+    -ms-flex-grow: 1;
+    flex-grow: 1;
+  }
+  .controll__item:active,
+  .controll__item.selected {
+    background-color: #000;
+    color: #fff;
+  }
+}
+
+.sub__controlls {
+  bottom: 0px;
+  z-index: 3;
+  background-color: #e6e6e6;
+  .transition(0.3s);
+}
+.sub__controlls--visile { bottom: 55px; }
+
+@import "_editor.less";
+
+/* helpers */
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+}
+
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+}
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+.invisible {
+    visibility: hidden;
+}
+
+.cf:before,
+.cf:after {
+    content: " ";
+    display: table;
+}
+
+.cf:after {
+    clear: both;
+}
+
+.cf {
+    *zoom: 1;
+}
