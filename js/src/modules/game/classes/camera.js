@@ -97,3 +97,84 @@ function setupLayers(level,leveltexture){
     
 }
 
+
+
+
+
+
+
+function updateLevelstatus(){
+
+    // zoom in/out with a/o
+    if (game.input.keyboard.isDown(Phaser.Keyboard.A) && (mapSizeMaxCurrent < mapSizeMax)) { mapSizeMaxCurrent += 32; }
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.O) && (mapSizeMaxCurrent > worldwidth )) { mapSizeMaxCurrent -= 32; }
+
+    mapSizeMaxCurrent = Phaser.Math.clamp(mapSizeMaxCurrent, worldwidth , mapSizeMax); 
+    worldScale = mapSizeMaxCurrent/mapSizeMax;
+
+    stageGroup.scale.set(worldScale);  // scales my stageGroup (contains all objects that shouldbe scaled)
+
+    if(game.input.activePointer.isDown && !game.input.pointer2.isDown){   //move around the world
+        if (oldcamera) { 
+            game.camera.x += oldcamera.x - game.input.activePointer.position.x; 
+            game.camera.y += oldcamera.y - game.input.activePointer.position.y; 
+        }
+        oldcamera = game.input.activePointer.position.clone();
+        // store current camera position (relative to the actual scale size of the world)
+        rescalefactorx = mapSizeX / (mapSizeX * worldScale); // multiply by rescalefactor to get original world value
+        rescalefactory = mapSizeY / (mapSizeY * worldScale);
+        currentcamerapositionX = game.camera.view.centerX*rescalefactorx;
+        currentcamerapositionY = game.camera.view.centerY*rescalefactory;
+    }
+    else { //center camera on the point that was in the center of the view atm the zooming started
+        oldcamera = null;
+        if (!currentcamerapositionX){ // if not set yet (never zoomed)
+            currentcamerapositionX = game.camera.view.centerX;
+            currentcamerapositionY = game.camera.view.centerY;
+        }
+        followx = currentcamerapositionX*worldScale;
+        followy = currentcamerapositionY*worldScale;
+
+        game.camera.focusOnXY(followx, followy);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var game = new Phaser.Game(worldwidth, worldheight, Phaser.CANVAS, '', {});
+game.state.add('boot', BootState, true);
+game.state.add('preload', PreloadState, false);
+game.state.add('0', Level0, false);
+
+
+</script>
+</body>
+</html>

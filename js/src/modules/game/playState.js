@@ -1,11 +1,12 @@
 define('module/game/playState', [], function (){
     
     var module = {};
-    var count, cursors, background, stageGroup;
-    var drag = false;
+    var count, cursors, background, stageGroup, uiService;
+    var drag = true;
     var dragInfo = {};
     var mapSizeMaxCurrent, mapSizeMax = 3000;
     var wW, wH, cW, cH, bW, bH;
+    var scaleFactor = 1;
 
 
     	module.preload = function(game){
@@ -36,12 +37,7 @@ define('module/game/playState', [], function (){
 	  		bH = stageGroup.height;
 
 
-	  		var uiService = game.$injector.get('uiService');
-	  		game.scope.$watch(function(){
-	  			return uiService.scale;
-	  		}, function(newValue, oldValue){
-	  			stageGroup.scale.setTo(newValue, newValue);
-	  		});
+	  		uiService = game.$injector.get('uiService');
 
 
 	  		/*
@@ -70,48 +66,60 @@ define('module/game/playState', [], function (){
 			*/
     	}
 
-    	module.zoomTo = function(scaleTarget){
-    		 // zoom in/out with a/o
-		    if (game.input.keyboard.isDown(Phaser.Keyboard.A) && (mapSizeMaxCurrent < mapSizeMax)) { mapSizeMaxCurrent += 32; }
-		    else if (game.input.keyboard.isDown(Phaser.Keyboard.O) && (mapSizeMaxCurrent > worldwidth )) { mapSizeMaxCurrent -= 32; }
-
-		    mapSizeMaxCurrent = Phaser.Math.clamp(mapSizeMaxCurrent, worldwidth , mapSizeMax); 
-		    worldScale = mapSizeMaxCurrent/mapSizeMax;
-
-		    stageGroup.scale.set(worldScale);  // scales my stageGroup (contains all objects that shouldbe scaled)
-
-		    if(game.input.activePointer.isDown && !game.input.pointer2.isDown){   //move around the world
-		        if (oldcamera) { 
-		            game.camera.x += oldcamera.x - game.input.activePointer.position.x; 
-		            game.camera.y += oldcamera.y - game.input.activePointer.position.y; 
-		        }
-		        oldcamera = game.input.activePointer.position.clone();
-		        // store current camera position (relative to the actual scale size of the world)
-		        rescalefactorx = mapSizeX / (mapSizeX * worldScale); // multiply by rescalefactor to get original world value
-		        rescalefactory = mapSizeY / (mapSizeY * worldScale);
-		        currentcamerapositionX = game.camera.view.centerX*rescalefactorx;
-		        currentcamerapositionY = game.camera.view.centerY*rescalefactory;
-		    }
-		    else { //center camera on the point that was in the center of the view atm the zooming started
-		        oldcamera = null;
-		        if (!currentcamerapositionX){ // if not set yet (never zoomed)
-		            currentcamerapositionX = game.camera.view.centerX;
-		            currentcamerapositionY = game.camera.view.centerY;
-		        }
-		        followx = currentcamerapositionX*worldScale;
-		        followy = currentcamerapositionY*worldScale;
-
-		        game.camera.focusOnXY(followx, followy);
-		    }
-
-    	}
-
     	module.render = function(game){
     		game.debug.cameraInfo(game.camera, 32, 32);
     	}
 
+    	module.checkBounds = function(cX, cY){
+    		var maxXpos = stageGroup.width - cW;
+		    var maxYpos = stageGroup.height - cH;
+
+    		if(Math.abs(cX) > maxXpos) { 
+    			cX = 0 - maxXpos;
+    		}
+    		if(cX > 0) { 
+    			cX = 0;
+    		}
+    		if(Math.abs(cY) > maxYpos) { 
+    			cY = 0 - maxYpos;
+    		}
+    		if(cY > 0) { 
+    			cY = 0;
+    		}
+
+    		return { cX : cX, cY : cY };
+    	}
+
     	module.update = function(game){
-    		if (game.input.activePointer.isDown) {	
+
+    		//update map scale
+    		if(scaleFactor != uiService.scale){
+    			var	scaleLimit = ((cW > cH) ? cW : cH) / ((wW > wH) ? wW : wH);
+
+	    		var centerPointW = (cW / 2) + Math.abs(stageGroup.x);
+	    		var centerPointH = (cH / 2) + Math.abs(stageGroup.y);
+	    		var savedW = stageGroup.width;
+	    		var savedH = stageGroup.height;
+
+	    		/*NEED BETTER SCALING*/
+	    		var scale = (scaleLimit > uiService.scale) ? scaleLimit : uiService.scale;
+	    			stageGroup.scale.setTo(uiService.scale, uiService.scale);
+
+	    		var newCenterPointW = (stageGroup.width * centerPointW) / savedW;
+	    		var newCenterPointH = (stageGroup.height * centerPointH) / savedH;
+
+	    		console.log(newCenterPointW, newCenterPointH, stageGroup.width, stageGroup.height);
+
+	    		var newStagePosi =  this.checkBounds(0 - (newCenterPointW - (cW / 2)), 0 - (newCenterPointH - (cH / 2)));
+
+	    		stageGroup.x = newStagePosi.cX;
+	    		stageGroup.y = newStagePosi.cY;
+
+	    		scaleFactor = uiService.scale;
+    		}
+
+    		//Move MAP on drag
+    		if (game.input.activePointer.isDown && drag) {	
     			if (game.origDragPoint) {		
 		    		//move world pivot instead off camera
 		    		/*
@@ -123,31 +131,14 @@ define('module/game/playState', [], function (){
 		    		game.camera.y += game.origDragPoint.y - game.input.activePointer.position.y;
 		    		*/
 
-		    		var maxXpos = stageGroup.width - cW;
-		    		var maxYpos = stageGroup.height - cH;
 		    		var cX = stageGroup.x;
 		    		var cY = stageGroup.y;
 
 		    		cX -= game.origDragPoint.x - game.input.activePointer.position.x;		
 		    		cY -= game.origDragPoint.y - game.input.activePointer.position.y;
 
-		    		if(Math.abs(cX) > maxXpos) { 
-		    			cX = 0 - maxXpos;
-		    		}
-		    		if(cX > 0) { 
-		    			cX = 0;
-		    		}
-		    		if(Math.abs(cY) > maxYpos) { 
-		    			cY = 0 - maxYpos;
-		    		}
-		    		if(cY > 0) { 
-		    			cY = 0;
-		    		}
-
-		    		stageGroup.x = cX;		
-		    		stageGroup.y = cY;
-
-		    		console.log(stageGroup.width, wW, game.camera.width);
+		    		stageGroup.x = this.checkBounds(cX, cY).cX;
+		    		stageGroup.y = this.checkBounds(cX, cY).cY;
 	    		}	
 	    		// set new drag origin to current position	
 	    		game.origDragPoint = game.input.activePointer.position.clone();

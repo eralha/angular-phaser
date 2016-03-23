@@ -9,8 +9,6 @@ define('module/angular/controllers', [], function (){
 	module.controller('MainController', ['$scope', '$filter', 'uiService', function($scope, $filter, uiService){
 
 		$scope.controlls = null;
-
-		console.log(uiService);
 	    
 		$scope.toggleControlls = function(controlls){
 			$scope.controlls = ($scope.controlls == controlls) ? null : controlls;
