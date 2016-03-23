@@ -1,8 +1,9 @@
 define('module/game/playState', [], function (){
     
     var module = {};
-    var count, cursors, background, stageGroup, uiService;
+    var count, cursors, background, stageGroup, uiService, spriteToDrag;
     var drag = true;
+    var dragSprite = false;
     var dragInfo = {};
     var mapSizeMaxCurrent, mapSizeMax = 3000;
     var wW, wH, cW, cH, bW, bH;
@@ -12,6 +13,7 @@ define('module/game/playState', [], function (){
     	module.preload = function(game){
     		game.load.image('MainBoard', 'assets/game_board.jpg');
     		game.load.image('TableBg', 'assets/table_bg.jpg');
+    		game.load.image('token', 'assets/icons_03.png');
     	}
 
     	module.create = function(game){
@@ -20,12 +22,35 @@ define('module/game/playState', [], function (){
     		stageGroup = game.add.group();
     		background = game.add.sprite(0, 0, 'TableBg');
 
+    		//resize to feet screen
+    		stageGroup.scale.setTo(0.5, 0.5);
+
+    		var board = game.add.sprite(0, 0, 'MainBoard');
+    		var token = game.add.sprite(0, 0, 'token');
+
+    		background.addChild(board);
+    		background.addChild(token);
+    		this.centerToObject(background, board);
+    		this.centerToObject(background, token);
+
+		    token.inputEnabled = true;
+		    token.events.onInputDown.add(function(){
+		    	dragSprite = true;
+		    	spriteToDrag = token;
+	  	    	drag = false;
+
+	  	    	console.log('drag');
+	  	    }, this);
+	  	    token.events.onInputUp.add(function(){
+	  	    	dragSprite = false;
+	  	    	spriteToDrag = null;
+	  	    	drag = true;
+
+	  	    	console.log('drag off');
+	  	    }, this);
+
     		//we will add to stage group all our objects
     		stageGroup.add(background);
-
-
-
-    		console.log(stageGroup.width);
 
 	  		//set bounds to camera move
 	  		game.world.setBounds(0, 0, 3000, 3000);
@@ -38,6 +63,9 @@ define('module/game/playState', [], function (){
 
 
 	  		uiService = game.$injector.get('uiService');
+
+	  		this.centerCamera();
+	  		
 
 
 	  		/*
@@ -68,6 +96,17 @@ define('module/game/playState', [], function (){
 
     	module.render = function(game){
     		game.debug.cameraInfo(game.camera, 32, 32);
+    	}
+
+    	module.centerCamera = function(){
+    		/* center viewport to world center */
+	  		stageGroup.x = 0 - ((stageGroup.width / 2 ) - (cW / 2));
+	  		stageGroup.y = 0 - ((stageGroup.height / 2 ) - (cH / 2));
+    	}
+
+    	module.centerToObject = function(obj1, obj2){
+    		obj2.x = (obj1.width / 2) - (obj2.width / 2);
+    		obj2.y = (obj1.height / 2) - (obj2.height / 2);
     	}
 
     	module.checkBounds = function(cX, cY){
@@ -119,6 +158,30 @@ define('module/game/playState', [], function (){
     		}
 
     		//Move MAP on drag
+    		if (dragSprite && spriteToDrag) {	
+    			console.log(game.input.activePointer);
+		    		//move world pivot instead off camera
+		    		/*
+		    		game.world.pivot.x += game.origDragPoint.x - game.input.activePointer.position.x;		
+		    		game.world.pivot.y += game.origDragPoint.y - game.input.activePointer.position.y;
+		    		*/
+		    		/*
+		    		game.camera.x += game.origDragPoint.x - game.input.activePointer.position.x;		
+		    		game.camera.y += game.origDragPoint.y - game.input.activePointer.position.y;
+		    		*/
+
+		    		var cX = spriteToDrag.x;
+		    		var cY = spriteToDrag.y;
+
+		    		cX -= game.origDragPoint.x - game.input.activePointer.position.x;		
+		    		cY -= game.origDragPoint.y - game.input.activePointer.position.y;
+
+		    		spriteToDrag.x = cX;
+		    		spriteToDrag.y = cY;
+	    		// set new drag origin to current position	
+	    		game.origDragPoint = game.input.activePointer.position.clone();
+    		}
+
     		if (game.input.activePointer.isDown && drag) {	
     			if (game.origDragPoint) {		
 		    		//move world pivot instead off camera
