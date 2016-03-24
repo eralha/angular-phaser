@@ -23,7 +23,7 @@ define('module/game/playState', [], function (){
     		background = game.add.sprite(0, 0, 'TableBg');
 
     		//resize to feet screen
-    		stageGroup.scale.setTo(0.5, 0.5);
+    		//stageGroup.scale.setTo(0.5, 0.5);
 
     		var board = game.add.sprite(0, 0, 'MainBoard');
     		var token = game.add.sprite(0, 0, 'token');
@@ -36,7 +36,13 @@ define('module/game/playState', [], function (){
 		    token.inputEnabled = true;
 		    token.events.onInputDown.add(function(){
 		    	dragSprite = true;
-		    	spriteToDrag = token;
+		    	spriteToDrag = {};
+		    	spriteToDrag.obj = token;
+		    	spriteToDrag.initX = token.x;
+		    	spriteToDrag.initY = token.y;
+		    	spriteToDrag.initCX = game.input.activePointer.clientX;
+		    	spriteToDrag.initCY = game.input.activePointer.clientY;
+
 	  	    	drag = false;
 
 	  	    	console.log('drag', game.input.activePointer);
@@ -160,6 +166,15 @@ define('module/game/playState', [], function (){
     		//Move MAP on drag
     		if (dragSprite && spriteToDrag) {
     			//move current dragging object arround, we need to take into account the scale off the group
+    			var xDif = (game.input.activePointer.clientX - spriteToDrag.initCX);
+    			var yDif = (game.input.activePointer.clientY - spriteToDrag.initCY);
+
+    				xDif = (xDif / scaleFactor);
+    				yDif = (yDif / scaleFactor);
+
+		    	spriteToDrag.obj.x = spriteToDrag.initX + (xDif);
+		    	spriteToDrag.obj.y = spriteToDrag.initY + (yDif);
+
     		}
 
     		if (game.input.activePointer.isDown && drag) {	
