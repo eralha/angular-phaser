@@ -23,7 +23,6 @@ define('module/game/playState', [], function (){
     		background = game.add.sprite(0, 0, 'TableBg');
 
     		//resize to feet screen
-    		//stageGroup.scale.setTo(0.5, 0.5);
 
     		var board = game.add.sprite(0, 0, 'MainBoard');
     		var token = game.add.sprite(0, 0, 'token');
@@ -69,6 +68,7 @@ define('module/game/playState', [], function (){
 
 
 	  		uiService = game.$injector.get('uiService');
+	  		uiService.setScale(0.2);
 
 	  		this.centerCamera();
 	  		
@@ -133,6 +133,13 @@ define('module/game/playState', [], function (){
     		}
 
     		return { cX : cX, cY : cY };
+    	}
+
+    	module.getClientPointToStagePoint = function(clientX, clientY){
+    		var centerPointW = (clientX) + Math.abs(stageGroup.x);
+    		var centerPointH = (clientY) + Math.abs(stageGroup.y);
+
+    		return {x: (centerPointW / scaleFactor), y: (centerPointH / scaleFactor)};
     	}
 
     	module.update = function(game){

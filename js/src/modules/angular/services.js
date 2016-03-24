@@ -26,6 +26,17 @@ define('module/angular/services', [], function (){
                 console.log('scaleDown', this.scale);
     		}
 
+            this.setScale = function(scale){
+                this.scale = scale;
+                if(this.scale <= this.minScale){
+                    this.scale = this.minScale;
+                }
+
+                if(this.scale >= this.maxScale){
+                    this.scale = this.maxScale;
+                }
+            }
+
     		return this;
 
 		}]);
