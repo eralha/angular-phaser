@@ -13,6 +13,11 @@ function InitGameEngine(scope, $injector, $rootScope){
     'module/game/playState'
     ], function(menuState, playState){
 
+    //assign service var to this game object
+    var gameService = $injector.get('gameService');
+
+        gameService.setGame(game);
+
     game.scope = scope;
     game.$rootScope = $rootScope;
     game.$injector = $injector;
