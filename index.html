@@ -26,13 +26,12 @@
   <script src="js/src/lib/less-1.3.3.min.js"></script>
 
   <!-- BOOTSTRAP AND FONT AWESOME -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/font-awesome-4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
   integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
   <!-- JQUERY -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="/js/libs/jquery-1.9.1.min.js"><\/script>')</script>
+  <script src="js/libs/jquery.min.js"></script>
 
   <!-- MAIN SCRIPTS -->
   <script data-main="js/main.js?v=6" src="js/src/lib/require.js"></script>
@@ -51,8 +50,8 @@
 
   <!-- SUB CONTROLLS -->
   <div class="bottom__controlls sub__controlls" ng-class="{'sub__controlls--visile' : controlls == 'camera'}">
-    <div class="controll__item"><i class="fa fa-search-plus" ng-click="scaleUp()"></i></div>
-    <div class="controll__item"><i class="fa fa-search-minus" ng-click="scaleDown()"></i></div>
+    <div class="controll__item" ng-click="scaleUp()"><i class="fa fa-search-plus"></i></div>
+    <div class="controll__item" ng-click="scaleDown()"><i class="fa fa-search-minus"></i></div>
     <div class="controll__item"><i class="fa fa-arrows-alt"></i></div>
   </div>
   <!-- END SUB CONTROLLS -->
