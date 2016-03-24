@@ -13,6 +13,8 @@ define('module/angular/services', [], function (){
     			if(this.scale >= this.maxScale){
     				this.scale = this.maxScale;
     			}
+
+                console.log('scaleUp', this.scale);
     		}
 
     		this.scaleDown = function(){
@@ -20,6 +22,8 @@ define('module/angular/services', [], function (){
     			if(this.scale <= this.minScale){
     				this.scale = this.minScale;
     			}
+
+                console.log('scaleDown', this.scale);
     		}
 
     		return this;

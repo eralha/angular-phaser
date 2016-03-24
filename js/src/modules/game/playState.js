@@ -39,14 +39,14 @@ define('module/game/playState', [], function (){
 		    	spriteToDrag = token;
 	  	    	drag = false;
 
-	  	    	console.log('drag');
+	  	    	console.log('drag', game.input.activePointer);
 	  	    }, this);
 	  	    token.events.onInputUp.add(function(){
 	  	    	dragSprite = false;
 	  	    	spriteToDrag = null;
 	  	    	drag = true;
 
-	  	    	console.log('drag off');
+	  	    	console.log('drag off', game.input.activePointer);
 	  	    }, this);
 
     		//we will add to stage group all our objects
@@ -95,7 +95,7 @@ define('module/game/playState', [], function (){
     	}
 
     	module.render = function(game){
-    		game.debug.cameraInfo(game.camera, 32, 32);
+    		//game.debug.cameraInfo(game.camera, 32, 32);
     	}
 
     	module.centerCamera = function(){
@@ -147,7 +147,7 @@ define('module/game/playState', [], function (){
 	    		var newCenterPointW = (stageGroup.width * centerPointW) / savedW;
 	    		var newCenterPointH = (stageGroup.height * centerPointH) / savedH;
 
-	    		console.log(newCenterPointW, newCenterPointH, stageGroup.width, stageGroup.height);
+	    		//console.log(newCenterPointW, newCenterPointH, stageGroup.width, stageGroup.height);
 
 	    		var newStagePosi =  this.checkBounds(0 - (newCenterPointW - (cW / 2)), 0 - (newCenterPointH - (cH / 2)));
 
@@ -158,28 +158,8 @@ define('module/game/playState', [], function (){
     		}
 
     		//Move MAP on drag
-    		if (dragSprite && spriteToDrag) {	
-    			console.log(game.input.activePointer);
-		    		//move world pivot instead off camera
-		    		/*
-		    		game.world.pivot.x += game.origDragPoint.x - game.input.activePointer.position.x;		
-		    		game.world.pivot.y += game.origDragPoint.y - game.input.activePointer.position.y;
-		    		*/
-		    		/*
-		    		game.camera.x += game.origDragPoint.x - game.input.activePointer.position.x;		
-		    		game.camera.y += game.origDragPoint.y - game.input.activePointer.position.y;
-		    		*/
-
-		    		var cX = spriteToDrag.x;
-		    		var cY = spriteToDrag.y;
-
-		    		cX -= game.origDragPoint.x - game.input.activePointer.position.x;		
-		    		cY -= game.origDragPoint.y - game.input.activePointer.position.y;
-
-		    		spriteToDrag.x = cX;
-		    		spriteToDrag.y = cY;
-	    		// set new drag origin to current position	
-	    		game.origDragPoint = game.input.activePointer.position.clone();
+    		if (dragSprite && spriteToDrag) {
+    			//move current dragging object arround, we need to take into account the scale off the group
     		}
 
     		if (game.input.activePointer.isDown && drag) {	
