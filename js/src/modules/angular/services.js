@@ -37,6 +37,10 @@ define('module/angular/services', [], function (){
                 }
             }
 
+            this.centerToScreen = function(){
+                
+            }
+
     		return this;
 
 		}]);
