@@ -50,8 +50,8 @@ define('module/angular/services', [], function (){
                 game = _game;
             }
 
-            this.setState = function(){
-
+            this.setState = function(state){
+                game.state.start(state);
             }
 
             return this;
