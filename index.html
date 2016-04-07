@@ -52,7 +52,7 @@
   <div class="bottom__controlls sub__controlls" ng-class="{'sub__controlls--visile' : controlls == 'camera'}">
     <div class="controll__item" ng-click="scaleUp()"><i class="fa fa-search-plus"></i></div>
     <div class="controll__item" ng-click="scaleDown()"><i class="fa fa-search-minus"></i></div>
-    <div class="controll__item"><i class="fa fa-arrows-alt"></i></div>
+    <div class="controll__item" ng-click="centerCamera()"><i class="fa fa-arrows-alt"></i></div>
   </div>
   <!-- END SUB CONTROLLS -->
 
@@ -62,7 +62,9 @@
     <div class="controll__item"><i class="fa fa-object-ungroup"></i></div>
   </div>
 
-  <ui-view class="angular-ui"></ui-view>
+  <!-- THIS VIEW WILL LOAD UI COMPONENTS -->
+    <ui-view class="angular-ui"></ui-view>
+  <!-- END -->
 
   <div class="game__canvas" game-render-zone>
     <div id="gameCanvas"></div>

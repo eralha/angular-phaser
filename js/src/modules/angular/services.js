@@ -8,6 +8,8 @@ define('module/angular/services', [], function (){
     		this.minScale = 0.2;
     		this.maxScale = 5;
 
+            var stage;
+
     		this.scaleUp = function(){
     			this.scale += 0.2;
     			if(this.scale >= this.maxScale){
@@ -37,8 +39,14 @@ define('module/angular/services', [], function (){
                 }
             }
 
-            this.centerToScreen = function(){
-                
+            this.setStage = function(_stage){
+                stage = _stage;
+            }
+
+            this.centerCamera = function(){
+                if(stage){
+                    stage.centerCamera();
+                }
             }
 
     		return this;
@@ -49,6 +57,7 @@ define('module/angular/services', [], function (){
         module.service('gameService', ['$q', '$http', '$filter', function($q, $http, $filter) {
 
             var game;
+            this.spriteToDrag = null;
 
             this.setGame = function(_game){
                 game = _game;
@@ -56,6 +65,14 @@ define('module/angular/services', [], function (){
 
             this.setState = function(state){
                 game.state.start(state);
+            }
+
+            this.startObjDrag = function(spriteToDrag){
+                this.spriteToDrag = spriteToDrag;
+            }
+
+            this.stopObjDrag = function(){
+                this.spriteToDrag = null;
             }
 
             return this;

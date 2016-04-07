@@ -3,7 +3,7 @@ define('module/game/playState', [
 	], function (stageController){
     
     var module = {};
-    var count, cursors, background, stageGroup, uiService, spriteToDrag, stage;
+    var count, cursors, background, stageGroup, uiService, gameService, spriteToDrag, stage;
     var stage;
     var drag = true;
     var dragSprite = false;
@@ -14,6 +14,9 @@ define('module/game/playState', [
 
 
     	module.preload = function(game){
+    		/*
+    		 * TODO: Create angular service that will load a .json file containing all the assets, paths and positions
+    		 */
     		game.load.image('MainBoard', 'assets/game_board.jpg');
     		game.load.image('TableBg', 'assets/table_bg.jpg');
     		game.load.image('token', 'assets/icons_03.png');
@@ -26,35 +29,17 @@ define('module/game/playState', [
     		stage.addStageBackground('TableBg');
 
     		var board = stage.addToStage('MainBoard');
-    		var token = stage.addToStage('token');
+    		var token = stage.addToStage('token', true);
 
     		stage.centerObjectToStage(board);
     		stage.centerObjectToStage(token);
 
-		    token.inputEnabled = true;
-		    token.events.onInputDown.add(function(){
-		    	dragSprite = true;
-		    	spriteToDrag = {};
-		    	spriteToDrag.obj = token;
-		    	spriteToDrag.initX = token.x;
-		    	spriteToDrag.initY = token.y;
-		    	spriteToDrag.initCX = game.input.activePointer.clientX;
-		    	spriteToDrag.initCY = game.input.activePointer.clientY;
-
-	  	    	drag = false;
-
-	  	    	console.log('drag', game.input.activePointer);
-	  	    }, this);
-	  	    token.events.onInputUp.add(function(){
-	  	    	dragSprite = false;
-	  	    	spriteToDrag = null;
-	  	    	drag = true;
-
-	  	    	console.log('drag off', game.input.activePointer);
-	  	    }, this);
-
-
+    		//Getting angular services
 	  		uiService = game.$injector.get('uiService');
+	  		gameService = game.$injector.get('gameService');
+
+	  		//Set this stage to ui service stage, we can use it on other places
+	  		uiService.setStage(stage);
 
 	  		//preparing ui state
 	  		stage.fitWorldToScreen();
@@ -64,7 +49,9 @@ define('module/game/playState', [
     	module.update = function(game){
 
     		 //Move MAP on drag
-	        if (dragSprite && spriteToDrag) {
+	        if (gameService.spriteToDrag) {
+
+	        	var spriteToDrag = gameService.spriteToDrag;
 
 	            //move current dragging object arround, we need to take into account the scale off the group
 	            var xDif = (game.input.activePointer.clientX - spriteToDrag.initCX);

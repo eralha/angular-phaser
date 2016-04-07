@@ -1,6 +1,6 @@
 define('module/game/classes/camera', [], function (){
     
-    var game, $injector, stageGroup, uiService, background;
+    var game, $injector, stageGroup, uiService, background, gameService;
     var mapSizeMaxCurrent, mapSizeMax = 3000;
     var wW, wH, cW, cH, bW, bH;
     var scaleFactor = 1;
@@ -13,6 +13,7 @@ define('module/game/classes/camera', [], function (){
         game = _game;
         $injector = game.$injector;
         uiService = $injector.get('uiService');
+        gameService = $injector.get('gameService');
 
         stageGroup = game.add.group();
     }
@@ -37,10 +38,31 @@ define('module/game/classes/camera', [], function (){
         bH = stageGroup.height;
     }
 
-    module.prototype.addToStage = function(assetKey){
+    module.prototype.addToStage = function(assetKey, hasInputEnabled){
         var asset = game.add.sprite(0, 0, assetKey);
+        var spriteToDrag = {};
 
         background.addChild(asset);
+
+        if(hasInputEnabled){
+            asset.inputEnabled = true;
+            asset.events.onInputDown.add(function(){
+                spriteToDrag.obj = asset;
+                spriteToDrag.initX = asset.x;
+                spriteToDrag.initY = asset.y;
+                spriteToDrag.initCX = game.input.activePointer.clientX;
+                spriteToDrag.initCY = game.input.activePointer.clientY;
+
+                gameService.startObjDrag(spriteToDrag);
+
+                console.log('drag', game.input.activePointer);
+            }, this);
+            asset.events.onInputUp.add(function(){
+                console.log('drag off', game.input.activePointer);
+
+                gameService.stopObjDrag();
+            }, this);
+        }
 
         return asset;
     }

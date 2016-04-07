@@ -20,6 +20,9 @@ define('module/angular/controllers', [], function (){
 		$scope.scaleDown = function(){
 			uiService.scaleDown();
 		}
+		$scope.centerCamera = function(){
+			uiService.centerCamera();
+		}
 
 	}]);
 
