@@ -56,11 +56,13 @@
   </div>
   <!-- END SUB CONTROLLS -->
 
+  <!-- THIS CONTROLLS will chow up when user select some option -->
   <div class="bottom__controlls">
     <div class="controll__item" ng-class="{'selected' : controlls == 'camera'}"ng-click="toggleControlls('camera')"><i class="fa fa-video-camera"></i></div>
     <div class="controll__item"><i class="fa fa-cog"></i></div>
     <div class="controll__item"><i class="fa fa-object-ungroup"></i></div>
   </div>
+  <!-- END CONTROLLS -->
 
   <!-- THIS VIEW WILL LOAD UI COMPONENTS -->
     <ui-view class="angular-ui"></ui-view>
