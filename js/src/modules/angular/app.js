@@ -41,7 +41,7 @@ define('module/angular/app', [
         app.constant('fireConfig', {
           rooms: firebaseREF+ 'rooms',
           users: firebaseREF+ 'users',
-          dataPipe: firebaseREF+ 'pipe',
+          dataPipe: firebaseREF+ 'dataPipe',
           objMovement: firebaseREF+ 'objMovement',
           onlineUsers: firebaseREF+''
         });

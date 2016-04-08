@@ -96,6 +96,8 @@ define('module/angular/services', [], function (){
 
             var pipeRef = new Firebase(fireConfig.dataPipe);
             var moveRef = new Firebase(fireConfig.objMovement);
+                //remove movement data on disconnect
+                moveRef.onDisconnect().remove();
 
             // download the data into a local object
             var movementLoaded = false;
