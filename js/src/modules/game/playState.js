@@ -3,7 +3,7 @@ define('module/game/playState', [
 	], function (stageController){
     
     var module = {};
-    var count, cursors, background, stageGroup, uiService, gameService, spriteToDrag, stage;
+    var count, cursors, background, stageGroup, uiService, gameService, fireService, spriteToDrag, stage;
     var stage;
     var drag = true;
     var dragSprite = false;
@@ -20,6 +20,7 @@ define('module/game/playState', [
     		game.load.image('MainBoard', 'assets/game_board.jpg');
     		game.load.image('TableBg', 'assets/table_bg.jpg');
     		game.load.image('token', 'assets/icons_03.png');
+            game.load.image('token2', 'assets/icons_03.png');
     	}
 
     	module.create = function(game){
@@ -30,6 +31,7 @@ define('module/game/playState', [
 
     		var board = stage.addToStage('MainBoard');
     		var token = stage.addToStage('token', true);
+            var token2 = stage.addToStage('token2', true);
 
     		stage.centerObjectToStage(board);
     		stage.centerObjectToStage(token);
@@ -37,9 +39,10 @@ define('module/game/playState', [
     		//Getting angular services
 	  		uiService = game.$injector.get('uiService');
 	  		gameService = game.$injector.get('gameService');
+            fireService = game.$injector.get('fireService');
 
 	  		//Set this stage to ui service stage, we can use it on other places
-	  		uiService.setStage(stage);
+	  		gameService.setStage(stage);
 
 	  		//preparing ui state
 	  		stage.fitWorldToScreen();
@@ -63,6 +66,7 @@ define('module/game/playState', [
 	            spriteToDrag.obj.x = spriteToDrag.initX + (xDif);
 	            spriteToDrag.obj.y = spriteToDrag.initY + (yDif);
 
+                fireService.moveObj(spriteToDrag.obj);
 	        }else{
 	        	stage.update();
 	        }

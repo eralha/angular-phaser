@@ -38,6 +38,15 @@ define('module/game/classes/camera', [], function (){
         bH = stageGroup.height;
     }
 
+    module.prototype.moveAsset = function(assetKey, props){
+        for(i in background.children){
+            if(background.children[i].key == assetKey){
+                background.children[i].x = props.x;
+                background.children[i].y = props.y;
+            }
+        }
+    }
+
     module.prototype.addToStage = function(assetKey, hasInputEnabled){
         var asset = game.add.sprite(0, 0, assetKey);
         var spriteToDrag = {};

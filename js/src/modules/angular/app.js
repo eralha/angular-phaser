@@ -1,10 +1,11 @@
 define('module/angular/app', [
+  'lib/angular-fire',
   'module/angular/controllers',
   'module/angular/services',
   'module/angular/directives'
   ], function (){
     
-    var app = angular.module('app', ['ui.router', 'app.services', 'app.controllers', 'app.directives'])
+    var app = angular.module('app', ['ui.router', 'app.services', 'app.controllers', 'app.directives', 'firebase'])
 
 
         app.config(function($stateProvider, $urlRouterProvider, $provide){
@@ -34,7 +35,16 @@ define('module/angular/app', [
                   url: '/list',
                   templateUrl: 'views/menu_game_list.html'
               })
-        })
+        });
+
+        var firebaseREF = 'https://angular-phaser.firebaseio.com/';
+        app.constant('fireConfig', {
+          rooms: firebaseREF+ 'rooms',
+          users: firebaseREF+ 'users',
+          dataPipe: firebaseREF+ 'pipe',
+          objMovement: firebaseREF+ 'objMovement',
+          onlineUsers: firebaseREF+''
+        });
 
         setTimeout(function(){
           angular.bootstrap(document, ['app']);
