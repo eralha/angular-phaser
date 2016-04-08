@@ -2,7 +2,7 @@
 var appCFO_baseUrl = "src";
 requirejs.config({
 	urlArgs : 'v=3',
-    baseUrl: '/js/',
+    baseUrl: 'js/',
     paths: {
         'lib' : appCFO_baseUrl+'/lib/',
         'module' : appCFO_baseUrl+'/modules'
