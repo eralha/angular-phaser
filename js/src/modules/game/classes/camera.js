@@ -75,22 +75,27 @@ define('module/game/classes/camera', [
             }, this);
 
 
-            var overStream = Rx.Observable.fromEventPattern(
-              function add (h) {
-                asset.events.onInputOver.add(h);
-              }
-            ).debounce(500);
-
             var outStream = Rx.Observable.fromEventPattern(
               function add (h) {
-                asset.events.onInputOut.add(h);
+                asset.events.onInputOut.add(function(){
+                    h('out');
+                });
               }
             );
 
+            var overStream = Rx.Observable.fromEventPattern(
+              function add (h) {
+                asset.events.onInputOver.add(function(e){
+                    h('over');
+                });
+              }
+            ).debounce(500);
+
+            
             var source = Rx.Observable.merge(overStream, outStream);
 
             source.subscribe(function (x) {
-                console.log('over');
+                console.log(x);
               });
         }
 
