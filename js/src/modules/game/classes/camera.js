@@ -1,4 +1,6 @@
-define('module/game/classes/camera', [], function (){
+define('module/game/classes/camera', [
+    'lib/rxjs.all.min'
+    ], function (Rx){
     
     var game, $injector, stageGroup, uiService, background, gameService;
     var mapSizeMaxCurrent, mapSizeMax = 3000;
@@ -71,6 +73,25 @@ define('module/game/classes/camera', [], function (){
 
                 gameService.stopObjDrag();
             }, this);
+
+
+            var overStream = Rx.Observable.fromEventPattern(
+              function add (h) {
+                asset.events.onInputOver.add(h);
+              }
+            ).debounce(500);
+
+            var outStream = Rx.Observable.fromEventPattern(
+              function add (h) {
+                asset.events.onInputOut.add(h);
+              }
+            );
+
+            var source = Rx.Observable.merge(overStream, outStream);
+
+            source.subscribe(function (x) {
+                console.log('over');
+              });
         }
 
         return asset;
