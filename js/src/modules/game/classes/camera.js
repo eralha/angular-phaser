@@ -89,14 +89,16 @@ define('module/game/classes/camera', [
                     h('over');
                 });
               }
-            ).debounce(500);
+            ).flatMapLatest(function(x) {
+                return Rx.Observable.timer(500).takeUntil(outStream).map(x);
+            })
 
             
             var source = Rx.Observable.merge(overStream, outStream);
 
             source.subscribe(function (x) {
                 console.log(x);
-              });
+            });
         }
 
         return asset;
