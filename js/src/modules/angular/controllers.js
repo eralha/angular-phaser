@@ -44,6 +44,10 @@ define('module/angular/controllers', [], function (){
 
 		$scope.roomList = fireService.getRooms();
 
+		$scope.userCount = function(key){
+			return fireService.getUserCount(key);
+		}
+
 		$scope.toggleProp = function(proName){
 			uiService.emit('toggleProp', {proName: 'showRoomList'});
 		}

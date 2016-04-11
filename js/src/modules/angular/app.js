@@ -1,7 +1,7 @@
 define('module/angular/app', [
   'lib/angular-fire',
   'module/angular/controllers',
-  'module/angular/services',
+  'module/angular/services/main',
   'module/angular/directives'
   ], function (){
     
