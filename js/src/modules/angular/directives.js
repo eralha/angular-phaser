@@ -17,6 +17,23 @@ define('module/angular/directives', [], function (){
 		  };
 		}]);
 
+		module.directive('roomList', ['$rootScope', '$injector', function($rootScope, $injector, uiService) {
+		  return {
+		  	restrict: 'EA',
+		  	scope: {},
+		  	templateUrl: 'views/room__list.html',
+		    controller: 'roomController',
+		    compile: function(e, a){
+		        //console.log($(e).html(), arguments);
+		        return function(scope, element, attrs) {
+
+		          
+
+		        }
+		    }
+		  };
+		}]);
+
     return module;
 
 });

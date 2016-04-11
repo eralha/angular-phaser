@@ -57,48 +57,71 @@ define('module/game/classes/camera', [
 
         if(hasInputEnabled){
             asset.inputEnabled = true;
-            asset.events.onInputDown.add(function(){
-                spriteToDrag.obj = asset;
-                spriteToDrag.initX = asset.x;
-                spriteToDrag.initY = asset.y;
-                spriteToDrag.initCX = game.input.activePointer.clientX;
-                spriteToDrag.initCY = game.input.activePointer.clientY;
 
-                gameService.startObjDrag(spriteToDrag);
+            var dragStartStream = Rx.Observable.fromEventPattern(function add (h) {
+                asset.events.onInputDown.add(function(){
+                    h('dragStart');
+                });
+              });
+            var dragStopStream = Rx.Observable.fromEventPattern(function add (h) {
+                asset.events.onInputUp.add(function(){
+                    h('dragEnd');
+                });
+              });
+            var dragMoveStream = Rx.Observable.fromEventPattern(function add (h) {
+                spriteToDrag.emitDrag = h;
+              });
 
-                console.log('drag', game.input.activePointer);
-            }, this);
-            asset.events.onInputUp.add(function(){
-                console.log('drag off', game.input.activePointer);
-
-                gameService.stopObjDrag();
-            }, this);
+            var dragSource = Rx.Observable.merge(dragStartStream, dragStopStream);
 
 
-            var outStream = Rx.Observable.fromEventPattern(
-              function add (h) {
+            var outStream = Rx.Observable.fromEventPattern(function add(h) {
                 asset.events.onInputOut.add(function(){
                     h('out');
                 });
-              }
-            );
+              });
 
-            var overStream = Rx.Observable.fromEventPattern(
-              function add (h) {
+            var overStream = Rx.Observable.fromEventPattern(function add (h) {
                 asset.events.onInputOver.add(function(e){
                     h('over');
                 });
-              }
-            ).flatMapLatest(function(x) {
-                return Rx.Observable.timer(500).takeUntil(outStream).map(x);
+              })
+            .flatMapLatest(function(x) {
+                return Rx.Observable
+                        .timer(500)
+                        .takeUntil(outStream)
+                        .takeUntil(dragStartStream)
+                        .takeUntil(dragMoveStream)
+                        .map(x);
             });
+
+            var overSource = Rx.Observable.merge(outStream, overStream);
 
             
-            var source = Rx.Observable.merge(overStream, outStream);
+            var source = Rx.Observable.merge(dragSource, overSource);
+                //Event Handling
+                source.subscribe(function (x) {
+                    if(x == 'out'){
+                        console.log(x);
+                    }
+                    if(x == 'over'){
+                        console.log(x);
+                    }
+                    if(x == 'dragStart'){
+                        spriteToDrag.obj = asset;
+                        spriteToDrag.initX = asset.x;
+                        spriteToDrag.initY = asset.y;
+                        spriteToDrag.initCX = game.input.activePointer.clientX;
+                        spriteToDrag.initCY = game.input.activePointer.clientY;
 
-            source.subscribe(function (x) {
-                console.log(x);
-            });
+                        gameService.startObjDrag(spriteToDrag);
+
+                        console.log('drag', game.input.activePointer);
+                    }
+                    if(x == 'dragEnd'){
+                        gameService.stopObjDrag();
+                    }
+                });
         }
 
         return asset;

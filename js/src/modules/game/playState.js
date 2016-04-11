@@ -66,6 +66,9 @@ define('module/game/playState', [
 	            spriteToDrag.obj.x = spriteToDrag.initX + (xDif);
 	            spriteToDrag.obj.y = spriteToDrag.initY + (yDif);
 
+                //emit Drag
+                spriteToDrag.emitDrag('dragMove');
+
                 fireService.moveObj(spriteToDrag.obj);
 	        }else{
 	        	stage.update();

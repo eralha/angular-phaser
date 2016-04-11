@@ -1,4 +1,6 @@
-define('module/angular/services', [], function (){
+define('module/angular/services', [
+    'lib/rxjs.all.min'
+    ], function (Rx){
     
     var module = angular.module('app.services', []);
 
@@ -7,6 +9,18 @@ define('module/angular/services', [], function (){
     		this.scale = 1;
     		this.minScale = 0.2;
     		this.maxScale = 5;
+
+            var eventEmiter;
+            this.eventStream = Rx.Observable.fromEventPattern(function add (h) {
+                eventEmiter = h;
+            });
+
+            this.emit = function(event){
+                var props = arguments[1] || {};
+                    props.$name = event;
+
+                eventEmiter(props);
+            }
 
     		this.scaleUp = function(){
     			this.scale += 0.2;
@@ -92,27 +106,43 @@ define('module/angular/services', [], function (){
             function($q, $http, $filter, $firebaseArray, fireConfig, $firebaseObject, gameService) {
 
             var sup = this;
-            var uid = Math.random() * 1000;//need proper uid generator
+            var uid = Math.round(Math.random() * 1000);//need proper uid generator
 
-            var pipeRef = new Firebase(fireConfig.dataPipe);
-            var moveRef = new Firebase(fireConfig.objMovement);
+            var roomsRef = new Firebase(fireConfig.rooms);
+            var roomList = $firebaseArray(roomsRef);
+            var roomRef;//this ref will store a ref when the user joins a room
+            var roomPipe;
+
+            var moveRef;
                 //remove movement data on disconnect
-                moveRef.onDisconnect().remove();
+                //moveRef.onDisconnect().remove();
 
             // download the data into a local object
-            var movementLoaded = false;
-            var movementPipe = $firebaseObject(moveRef);
+            var movementPipe;
             var movementWatchRef;
 
+            //observe changes in room data
+            var roomsPresenceRef = new Firebase(fireConfig.dataPipe+'/room');
+            var roomsPresencePipe = $firebaseArray(roomsPresenceRef);
+
             //wait fot movement data load
-            movementPipe.$loaded().then(function(){
-                movementLoaded = true;
-                //watch for changes in our movement reference
-                movementWatchRef = movementPipe.$watch(sup.watchMovement);
+            roomList.$loaded().then(function(){
+                //Listen for room presence changes and update room list
+                roomsPresenceRef.on("value", function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key();
+                        var numUsers = childSnapshot.numChildren();
+
+                        if(roomList.length > 0){
+                            var index = roomList.$indexFor(key);
+                            roomList[index].numUsers = numUsers;
+                        }
+                    });
+                });
             });
 
             this.moveObj = function(obj){
-                if(!movementLoaded){ return; }
+                if(!movementPipe){ return; }
 
                 movementPipe[obj.key] = {x: obj.x, y: obj.y, uid: uid};
                 movementPipe.$save();
@@ -123,6 +153,59 @@ define('module/angular/services', [], function (){
                     if(value.uid != uid){
                         gameService.moveObj(key, value);
                     }
+                });
+            }
+
+            this.getRooms = function(){
+                return roomList;
+            }
+
+            this.joinRoom = function(key){
+                //we need to check if we are connected to a room and do some cleanup
+                if(roomRef){
+                    var index = roomList.$indexFor(roomRef.parent().key());
+                        roomList[index].numUsers --;
+                    roomRef.remove();
+                }
+                if(movementWatchRef){
+                    movementWatchRef();
+                }
+                if(movementPipe){
+                    movementPipe.$destroy();
+                }
+
+                moveRef = new Firebase(fireConfig.objMovement+'/'+key);
+                roomRef = new Firebase(fireConfig.dataPipe+'/room/'+key+'/'+uid);
+                roomRef.onDisconnect().remove();
+
+                roomPipe = $firebaseObject(roomRef);
+                movementPipe = $firebaseObject(moveRef);
+
+                //add presence to room
+                roomPipe.status = 'online'
+                roomPipe.$save();
+
+                //wait fot movement data load
+                movementPipe.$loaded().then(function(){
+                    //watch for changes in our movement reference
+                    movementWatchRef = movementPipe.$watch(sup.watchMovement);
+                });
+
+                //return promise for movementpipe
+                return movementPipe.$loaded();
+            }
+
+            this.createRoom = function(roomName){
+                if(!roomName){ return; }
+                var room = {};
+                    room.name = roomName;
+                    room.uid = uid;
+
+                roomList.$add(room).then(function(ref) {
+                  //waiting fro movement pipe connected
+                  sup.joinRoom(ref.key()).then(function(data){
+                    console.log(data, 'Here we should clean room when this connection disconnects');
+                  });
                 });
             }
 
