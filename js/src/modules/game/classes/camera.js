@@ -54,7 +54,7 @@ define('module/game/classes/camera', [
         /*
          * Note: background is where all the assets will live
          */
-        var asset = new Asset(game, background);
+        var asset = new Asset(game, stageGroup);
 
         var sprite = asset.addToStage(assetKey, hasInputEnabled);
 

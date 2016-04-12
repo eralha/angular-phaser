@@ -16,7 +16,7 @@ define('module/game/classes/asset', [
         var asset = game.add.sprite(0, 0, assetKey);
         var spriteToDrag = {};
 
-        stage.addChild(asset);
+        stage.add(asset);
 
         if(hasInputEnabled){
             asset.inputEnabled = true;
