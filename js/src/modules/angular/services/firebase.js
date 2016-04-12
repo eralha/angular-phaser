@@ -7,8 +7,13 @@ define('module/angular/services/firebase', [
         module.service('fireService', ['$q', '$http', '$filter', '$firebaseArray', 'fireConfig', '$firebaseObject', 'gameService',
             function($q, $http, $filter, $firebaseArray, fireConfig, $firebaseObject, gameService) {
 
+            //stores user presence for rooms
+            this.roomUserCount = {};
+
             var sup = this;
             var uid = Math.round(Math.random() * 1000);//need proper uid generator
+            //location config
+            var roomPresenceLoc = 'roomPresence';
 
             var currRoomKey;
 
@@ -18,15 +23,12 @@ define('module/angular/services/firebase', [
             var roomPipe;
 
             var moveRef;
-                //remove movement data on disconnect
-                //moveRef.onDisconnect().remove();
-
-            // download the data into a local object
             var movementPipe;
             var movementWatchRef;
 
             //observe changes in room data
-            var roomsPresenceRef = new Firebase(fireConfig.dataPipe+'/room');
+            var roomsPresenceRef = new Firebase(fireConfig.dataPipe+'/'+roomPresenceLoc);
+            //This pipe will trigger scope changes
             var roomsPresencePipe = $firebaseArray(roomsPresenceRef);
 
                 //wait fot roomList data load
@@ -55,7 +57,6 @@ define('module/angular/services/firebase', [
             }
 
             this.leaveRoom = function(){
-                console.log('leaving rrom');
                 currRoomKey = null;
 
                 if(roomRef){
@@ -78,7 +79,9 @@ define('module/angular/services/firebase', [
                 currRoomKey = key;
 
                 moveRef = new Firebase(fireConfig.objMovement+'/'+key);
-                roomRef = new Firebase(fireConfig.dataPipe+'/room/'+key+'/'+uid);
+                roomRef = new Firebase(fireConfig.dataPipe+'/'+roomPresenceLoc+'/'+key+'/'+uid);
+
+                //remove presence of this user from the room presence location
                 roomRef.onDisconnect().remove();
 
                 roomPipe = $firebaseObject(roomRef);
@@ -108,7 +111,7 @@ define('module/angular/services/firebase', [
                   //when this user disconnects from server delete current room
                   new Firebase(fireConfig.objMovement+'/'+ref.key()).onDisconnect().remove();
                   new Firebase(fireConfig.rooms+'/'+ref.key()).onDisconnect().remove();
-                  new Firebase(fireConfig.dataPipe+'/room/'+ref.key()).onDisconnect().remove();
+                  new Firebase(fireConfig.dataPipe+'/'+roomPresenceLoc+'/'+ref.key()).onDisconnect().remove();
 
                   sup.joinRoom(ref.key());
                 });
