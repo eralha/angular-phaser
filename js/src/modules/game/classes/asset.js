@@ -71,6 +71,9 @@ define('module/game/classes/asset', [
                         console.log(x);
                     }
                     if(x == 'dragStart'){
+                    	//make this the top off the display list
+                    	asset.bringToTop();
+
                         spriteToDrag.obj = asset;
                         spriteToDrag.initX = asset.x;
                         spriteToDrag.initY = asset.y;
