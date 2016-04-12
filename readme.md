@@ -1,4 +1,4 @@
-<h1>Angular + Phaser</h1>
+<h1>Angular + Phaser + Rxjs</h1>
 
 <p>Experimenting with angular.js and Phaser.js, this is a study project to evaluate the capabilities off using both frameworks, to develop HTML 5 games.</p>
 
