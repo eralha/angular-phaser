@@ -51,10 +51,6 @@
 <!--[if lt IE 8]>  
   <div class="chromeframe">O seu browser de internet é <b>muito</b> antigo. <a href="http://browsehappy.com/">Actualize para um mais recente</a> ou <a href="http://www.google.com/chromeframe/?redirect=true&hl=pt-PT&quickenable=true">instale a Google Chrome Frame</a> para uma melhor experiência.</div><![endif]-->
 
-  <!-- ROOM LIST DIRECTIVE -->
-    <room-list ng-if="showRoomList"></room-list>
-  <!-- END ROOM LIST DIRECTIVE -->
-
   <!-- SUB CONTROLLS -->
   <div class="bottom__controlls sub__controlls" ng-class="{'sub__controlls--visile' : controlls == 'camera'}">
     <div class="controll__item" ng-click="scaleUp()"><i class="fa fa-search-plus"></i></div>
@@ -68,12 +64,12 @@
     <div class="controll__item" ng-class="{'selected' : controlls == 'camera'}" ng-click="toggleControlls('camera')"><i class="fa fa-video-camera"></i></div>
     <div class="controll__item"><i class="fa fa-cog"></i></div>
     <div class="controll__item"><i class="fa fa-object-ungroup"></i></div>
-    <div class="controll__item" ng-class="{'selected' : showRoomList}" ng-click="toggleProp('showRoomList')"><i class="fa fa-users"></i></div>
+    <div class="controll__item" ui-sref="roomList"><i class="fa fa-users"></i></div>
   </div>
   <!-- END CONTROLLS -->
 
   <!-- THIS VIEW WILL LOAD UI COMPONENTS -->
-    <ui-view class="angular-ui"></ui-view>
+    <ui-view class="angular-ui views-container"></ui-view>
   <!-- END -->
 
   <div class="game__canvas" game-render-zone>

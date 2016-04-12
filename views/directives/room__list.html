@@ -1,0 +1,33 @@
+﻿
+<div class="game__rooms">
+	
+	<div class="fa fa-times close_icon" ng-click="closeClick()"></div>
+
+	<h1>Game Rooms</h1>
+
+	<div class="room__list list-group">
+		
+		<div class="room__item list-group-item cf" ng-repeat="room in roomList">
+			<div class="fLeft mr_10"><b>{{room.name}}</b></div>
+			<div class="fLeft">{{room.uid}}</div>
+			<button class="btn btn-primary bt__join" ng-click="joinRoom(room)">Join 
+				<span class="badge">{{userCount(room.$id)}}</span></button>
+		</div>
+
+		<div class="room__item list-group-item cf" ng-if="roomList.length == 0">
+			No game rooms to show...
+		</div>
+
+	</div>
+
+	<div class="create__room">
+		<div class="input-group">
+		  <span class="input-group-addon" id="basic-addon1">Room name:</span>
+		  <input type="text" class="form-control" placeholder="..." aria-describedby="basic-addon1" ng-model="roomName">
+		  <span class="input-group-btn">
+	        <button class="btn btn-success" type="button" ng-click="addRoom()">Create</button>
+	      </span>
+		</div>
+	</div>
+
+</div>

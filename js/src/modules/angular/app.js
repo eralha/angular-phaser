@@ -24,17 +24,17 @@ define('module/angular/app', [
           } ]);
 
           // For any unmatched url, send to /route1
-          $urlRouterProvider.otherwise("/loby")
+          //$urlRouterProvider.otherwise("/loby")
           
           $stateProvider
-            .state('loby', {
-                url: "/loby",
-                templateUrl: "views/menu.html"
+            .state('game', {
+                url: "/game",
+                templateUrl: "views/game.html"
             })
-              .state('loby.list', {
-                  url: '/list',
-                  templateUrl: 'views/menu_game_list.html'
-              })
+            .state('roomList', {
+                url: "/roomList",
+                templateUrl: "views/room__list.html"
+            })
         });
 
         var firebaseREF = 'https://angular-phaser.firebaseio.com/';

@@ -6,9 +6,16 @@ define('module/angular/controllers', [], function (){
 	    
 	}]);
 
-	module.controller('MainController', ['$scope', '$filter', 'uiService', function($scope, $filter, uiService){
+	module.controller('MainController', ['$scope', '$filter', 'uiService', '$rootScope', '$state',
+		function($scope, $filter, uiService, $rootScope, $state){
 
 		$scope.controlls = null;
+		$scope.lastState;
+
+		$rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+		   //assign the "from" parameter to something
+		   $scope.lastState = (from.name != '') ?  from.name : 'game';
+		});
 
 		uiService.eventStream.subscribe(function (event) {
 			if(event.$name == 'toggleProp'){
@@ -17,6 +24,10 @@ define('module/angular/controllers', [], function (){
 				}else{
 					$scope[event.proName] = !$scope[event.proName];
 				}
+			}
+
+			if(event.$name == 'stateBack'){
+				$state.go($scope.lastState);
 			}
 		});
 
@@ -48,8 +59,8 @@ define('module/angular/controllers', [], function (){
 			return fireService.getUserCount(key);
 		}
 
-		$scope.toggleProp = function(proName){
-			uiService.emit('toggleProp', {proName: 'showRoomList'});
+		$scope.closeClick = function(proName){
+			uiService.emit('stateBack');
 		}
 
 		$scope.addRoom = function(){

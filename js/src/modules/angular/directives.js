@@ -21,7 +21,7 @@ define('module/angular/directives', [], function (){
 		  return {
 		  	restrict: 'EA',
 		  	scope: {},
-		  	templateUrl: 'views/room__list.html',
+		  	templateUrl: 'views/directives/room__list.html',
 		    controller: 'roomController',
 		    compile: function(e, a){
 		        //console.log($(e).html(), arguments);
