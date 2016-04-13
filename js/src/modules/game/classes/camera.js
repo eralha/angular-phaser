@@ -54,10 +54,10 @@ define('module/game/classes/camera', [
     }
 
     module.prototype.moveAsset = function(assetKey, props){
-        for(i in background.children){
-            if(background.children[i].key == assetKey){
-                background.children[i].x = props.x;
-                background.children[i].y = props.y;
+        for(i in stageGroup.children){
+            if(stageGroup.children[i].key == assetKey){
+                stageGroup.children[i].x = props.x;
+                stageGroup.children[i].y = props.y;
             }
         }
     }

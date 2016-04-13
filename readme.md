@@ -18,3 +18,4 @@ TODOS:
 - update room on join
 - add phaser preload
 - add grunt build
+- review scale equations

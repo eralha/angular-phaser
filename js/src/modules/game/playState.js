@@ -17,10 +17,13 @@ define('module/game/playState', [
     		/*
     		 * TODO: Create angular service that will load a .json file containing all the assets, paths and positions
     		 */
+
+             /*
     		game.load.image('MainBoard', 'assets/game_board.jpg');
     		game.load.image('TableBg', 'assets/table_bg.jpg');
     		game.load.image('token', 'assets/icons_03.png');
             game.load.image('token2', 'assets/icons_03.png');
+            */
 
             //Getting angular services
             assetLoaderService = game.$injector.get('assetLoaderService');
@@ -41,7 +44,7 @@ define('module/game/playState', [
 
                 if(!loadedObjs[obj.url]){
 
-                    var tokenId = 'token'+(Math.random()*1000);
+                    var tokenId = 'token'+Math.ceil(Math.random()*(1000*1000));
 
                     obj.tokenId = tokenId;
                     game.load.image(tokenId, obj.url);
@@ -67,29 +70,29 @@ define('module/game/playState', [
 
                 var obj = gameConfig.objects[i];
 
-                if(!loadedObjs[obj.url]){
+                var asset = stage.addToStage(obj.tokenId, true);
 
-                    var tokenId = 'token'+(Math.random()*1000);
+                if((obj.x && obj.y) != 'center'){
+                    asset.x = parseFloat(obj.x);
+                    asset.y = parseFloat(obj.y);
+                } 
 
-                    obj.tokenId = tokenId;
-                    game.load.image(tokenId, obj.url);
-
-                    loadedObjs[obj.url] = tokenId;
-                }else{
-                    //set this object id to the same id as the loaded token
-                    obj.tokenId = loadedObjs[obj.url];
+                if(obj.x == 'center'){
+                    stage.centerObjectToStageX(asset);
                 }
-
+                if(obj.y == 'center'){
+                    stage.centerObjectToStageY(asset);
+                }
             }
 
-            return;
-
+            /*
     		var board = stage.addToStage('MainBoard');
     		var token = stage.addToStage('token', true);
             var token2 = stage.addToStage('token2', true);
 
     		stage.centerObjectToStage(board);
     		stage.centerObjectToStage(token);
+            */
 
 	  		//Set this stage to ui service stage, we can use it on other places
 	  		gameService.setStage(stage);
