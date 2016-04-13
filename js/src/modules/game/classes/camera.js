@@ -128,6 +128,14 @@ define('module/game/classes/camera', [
         obj2.y = (background.height / 2) - (obj2.height / 2);
     }
 
+    module.prototype.centerObjectToStageX = function(obj2){
+        obj2.x = (background.width / 2) - (obj2.width / 2);
+    }
+
+    module.prototype.centerObjectToStageY = function(obj2){
+        obj2.y = (background.height / 2) - (obj2.height / 2);
+    }
+
     module.prototype.checkBounds = function(cX, cY){
         var maxXpos = stageGroup.width - cW;
         var maxYpos = stageGroup.height - cH;

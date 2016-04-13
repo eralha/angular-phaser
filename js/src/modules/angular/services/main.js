@@ -104,29 +104,6 @@ define('module/angular/services/main', [
         }]);
 
 
-        module.service('assetLoaderService', ['$q', '$http', '$filter', function($q, $http, $filter) {
-
-
-            this.loadAssetFile = function(loadPath){
-                var def = $q.defer();
-
-                $http.get(loadPath).
-                  success(function(data, status, headers, config) {
-
-                      def.resolve(data);
-
-                  }).error(function() {
-                    def.reject("Error loading");
-                  });;//end http
-
-                def.promise;
-            }
-
-
-            return this;
-
-        }]);
-
     return module;
 
 });

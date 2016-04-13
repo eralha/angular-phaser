@@ -16,3 +16,5 @@ TODOS:
 &nbsp;&nbsp;- board
 - add screen to load diferent games games
 - update room on join
+- add phaser preload
+- add grunt build

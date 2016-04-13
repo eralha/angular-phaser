@@ -6,8 +6,8 @@ define('module/angular/controllers', [], function (){
 	    
 	}]);
 
-	module.controller('MainController', ['$scope', '$filter', 'uiService', '$rootScope', '$state', 'gameService',
-		function($scope, $filter, uiService, $rootScope, $state, gameService){
+	module.controller('MainController', ['$scope', '$filter', 'uiService', '$rootScope', '$state', 'gameService', 'assetLoaderService',
+		function($scope, $filter, uiService, $rootScope, $state, gameService, assetLoaderService){
 
 		$scope.controlls = null;
 		$scope.lastState;
@@ -30,6 +30,13 @@ define('module/angular/controllers', [], function (){
 				$state.go($scope.lastState);
 			}
 		});
+
+		//For early develop only,remove this later
+		setTimeout(function(){
+			assetLoaderService.loadSave('json/save.json').then(function(data){
+				gameService.setState('Play');
+			});
+		}, 500);
 
 		$scope.toggleProp = function(proName){
 			uiService.emit('toggleProp', {proName: 'showRoomList'});

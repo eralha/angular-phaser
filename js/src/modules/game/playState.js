@@ -3,7 +3,7 @@ define('module/game/playState', [
 	], function (stageController){
     
     var module = {};
-    var count, cursors, background, stageGroup, uiService, gameService, fireService, spriteToDrag, stage;
+    var count, cursors, background, stageGroup, uiService, assetLoaderService, gameService, fireService, spriteToDrag, stage, gameConfig;
     var stage;
     var drag = true;
     var dragSprite = false;
@@ -21,6 +21,38 @@ define('module/game/playState', [
     		game.load.image('TableBg', 'assets/table_bg.jpg');
     		game.load.image('token', 'assets/icons_03.png');
             game.load.image('token2', 'assets/icons_03.png');
+
+            //Getting angular services
+            assetLoaderService = game.$injector.get('assetLoaderService');
+            uiService = game.$injector.get('uiService');
+            gameService = game.$injector.get('gameService');
+            fireService = game.$injector.get('fireService');
+
+            gameConfig = assetLoaderService.getLastLoaded();
+
+            var loadedObjs = {};
+
+            game.load.image('TableBg', gameConfig.tableURL);
+
+            //preload all the sprites we need for this table
+            for(i in gameConfig.objects){
+
+                var obj = gameConfig.objects[i];
+
+                if(!loadedObjs[obj.url]){
+
+                    var tokenId = 'token'+(Math.random()*1000);
+
+                    obj.tokenId = tokenId;
+                    game.load.image(tokenId, obj.url);
+
+                    loadedObjs[obj.url] = tokenId;
+                }else{
+                    //set this object id to the same id as the loaded token
+                    obj.tokenId = loadedObjs[obj.url];
+                }
+
+            }
     	}
 
     	module.create = function(game){
@@ -29,17 +61,35 @@ define('module/game/playState', [
     		stage = new stageController(game);
     		stage.addStageBackground('TableBg');
 
+            console.log(gameConfig);
+
+            for(i in gameConfig.objects){
+
+                var obj = gameConfig.objects[i];
+
+                if(!loadedObjs[obj.url]){
+
+                    var tokenId = 'token'+(Math.random()*1000);
+
+                    obj.tokenId = tokenId;
+                    game.load.image(tokenId, obj.url);
+
+                    loadedObjs[obj.url] = tokenId;
+                }else{
+                    //set this object id to the same id as the loaded token
+                    obj.tokenId = loadedObjs[obj.url];
+                }
+
+            }
+
+            return;
+
     		var board = stage.addToStage('MainBoard');
     		var token = stage.addToStage('token', true);
             var token2 = stage.addToStage('token2', true);
 
     		stage.centerObjectToStage(board);
     		stage.centerObjectToStage(token);
-
-    		//Getting angular services
-	  		uiService = game.$injector.get('uiService');
-	  		gameService = game.$injector.get('gameService');
-            fireService = game.$injector.get('fireService');
 
 	  		//Set this stage to ui service stage, we can use it on other places
 	  		gameService.setStage(stage);
@@ -85,6 +135,7 @@ define('module/game/playState', [
             uiService = null;
             gameService = null;
             fireService = null;
+            gameConfig = null;
         }
 
     return module;

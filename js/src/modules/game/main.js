@@ -26,7 +26,7 @@ function InitGameEngine(scope, $injector, $rootScope){
     game.state.add('MainMenu', menuState);
 
     //Start the main state
-    game.state.start('Play');
+    game.state.start('MainMenu');
 
   });
 

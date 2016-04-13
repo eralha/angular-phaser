@@ -1,9 +1,9 @@
 [{
 	"name" : "Orleans",
-	"tableURL" : "assets/table_bg.png",
+	"tableURL" : "assets/table_bg.jpg",
 	"objects" : [
 		{
-			"url" : "assets/game_board.png",
+			"url" : "assets/game_board.jpg",
 			"isRetina" : "false",
 			"type" : "sprite",
 			"x" : "center",
@@ -20,8 +20,8 @@
 			"url" : "assets/icons_03.png",
 			"isRetina" : "false",
 			"type" : "sprite",
-			"x" : "200",
-			"y": "200"
+			"x" : "center",
+			"y": "center"
 		}
 	]
 }]
