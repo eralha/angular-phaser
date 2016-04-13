@@ -1,9 +1,10 @@
 define('module/angular/services/main', [
     'lib/rxjs.all.min',
-    'module/angular/services/firebase'
+    'module/angular/services/firebase',
+    'module/angular/services/saveLoader'
     ], function (Rx){
     
-    var module = angular.module('app.services', ['fireService']);
+    var module = angular.module('app.services', ['fireService', 'saveLoader']);
 
     	module.service('uiService', ['$q', '$http', '$filter', 'gameService', function($q, $http, $filter, gameService) {
 
