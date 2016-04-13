@@ -77,6 +77,16 @@ define('module/game/playState', [
     		return;
     	}
 
+        module.shutdown = function(game){
+            console.log('shutdown state');
+            stage.destroy();
+
+            stage = null;
+            uiService = null;
+            gameService = null;
+            fireService = null;
+        }
+
     return module;
 
 });

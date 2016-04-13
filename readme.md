@@ -14,4 +14,5 @@ TODOS:
 &nbsp;&nbsp;- token
 &nbsp;&nbsp;- tile
 &nbsp;&nbsp;- board
-- add screen to load games
+- add screen to load diferent games games
+- update room on join

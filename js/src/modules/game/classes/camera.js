@@ -11,14 +11,26 @@ define('module/game/classes/camera', [
     var dragSprite = false;
     var dragInfo = {};
     var mapSizeMaxCurrent, mapSizeMax = 3000;
+    var assetsMap;
 
     function module(_game){
+        assetsMap = new Array();
         game = _game;
         $injector = game.$injector;
         uiService = $injector.get('uiService');
         gameService = $injector.get('gameService');
 
         stageGroup = game.add.group();
+    }
+
+    module.prototype.destroy = function(){
+        background = null;
+        stageGroup = null;
+        
+        for(i in assetsMap){
+            assetsMap[i].destroy();
+            delete assetsMap[i];
+        }
     }
 
     module.prototype.addStageBackground = function(assetKey){
@@ -55,6 +67,8 @@ define('module/game/classes/camera', [
          * Note: background is where all the assets will live
          */
         var asset = new Asset(game, stageGroup);
+
+        assetsMap.push(asset);
 
         var sprite = asset.addToStage(assetKey, hasInputEnabled);
 
@@ -117,7 +131,7 @@ define('module/game/classes/camera', [
     module.prototype.checkBounds = function(cX, cY){
         var maxXpos = stageGroup.width - cW;
         var maxYpos = stageGroup.height - cH;
-
+        
         if(Math.abs(cX) > maxXpos) { 
             cX = 0 - maxXpos;
         }
@@ -161,7 +175,9 @@ define('module/game/classes/camera', [
 
             //console.log(newCenterPointW, newCenterPointH, stageGroup.width, stageGroup.height);
 
-            var newStagePosi =  this.checkBounds(0 - (newCenterPointW - (cW / 2)), 0 - (newCenterPointH - (cH / 2)));
+            var cx = 0 - (newCenterPointW - (cW / 2));
+            var cy = 0 - (newCenterPointH - (cH / 2));
+            var newStagePosi =  this.checkBounds(cx, cy);
 
             stageGroup.x = newStagePosi.cX;
             stageGroup.y = newStagePosi.cY;

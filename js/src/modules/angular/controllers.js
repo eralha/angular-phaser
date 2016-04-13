@@ -6,8 +6,8 @@ define('module/angular/controllers', [], function (){
 	    
 	}]);
 
-	module.controller('MainController', ['$scope', '$filter', 'uiService', '$rootScope', '$state',
-		function($scope, $filter, uiService, $rootScope, $state){
+	module.controller('MainController', ['$scope', '$filter', 'uiService', '$rootScope', '$state', 'gameService',
+		function($scope, $filter, uiService, $rootScope, $state, gameService){
 
 		$scope.controlls = null;
 		$scope.lastState;
@@ -47,6 +47,10 @@ define('module/angular/controllers', [], function (){
 		}
 		$scope.centerCamera = function(){
 			uiService.centerCamera();
+		}
+
+		$scope.changeGameState = function(state){
+			gameService.setState(state);
 		}
 
 	}]);
