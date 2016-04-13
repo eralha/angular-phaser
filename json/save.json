@@ -3,6 +3,7 @@
 	"tableURL" : "assets/table_bg.jpg",
 	"objects" : [
 		{
+			"objId" : "token1",
 			"url" : "assets/game_board.jpg",
 			"isRetina" : "false",
 			"type" : "sprite",
@@ -10,6 +11,7 @@
 			"y": "center"
 		},
 		{
+			"objId" : "token2",
 			"url" : "assets/icons_03.png",
 			"isRetina" : "false",
 			"type" : "sprite",
@@ -17,6 +19,7 @@
 			"y": "200"
 		},
 		{
+			"objId" : "token3",
 			"url" : "assets/icons_03.png",
 			"isRetina" : "false",
 			"type" : "sprite",

@@ -42,18 +42,7 @@ define('module/game/playState', [
 
                 var obj = gameConfig.objects[i];
 
-                if(!loadedObjs[obj.url]){
-
-                    var tokenId = 'token'+Math.ceil(Math.random()*(1000*1000));
-
-                    obj.tokenId = tokenId;
-                    game.load.image(tokenId, obj.url);
-
-                    loadedObjs[obj.url] = tokenId;
-                }else{
-                    //set this object id to the same id as the loaded token
-                    obj.tokenId = loadedObjs[obj.url];
-                }
+                game.load.image(obj.objId, obj.url);
 
             }
     	}
@@ -70,7 +59,7 @@ define('module/game/playState', [
 
                 var obj = gameConfig.objects[i];
 
-                var asset = stage.addToStage(obj.tokenId, true);
+                var asset = stage.addToStage(obj.objId, true);
 
                 if((obj.x && obj.y) != 'center'){
                     asset.x = parseFloat(obj.x);
