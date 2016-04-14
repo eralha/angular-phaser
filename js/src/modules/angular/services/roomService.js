@@ -63,6 +63,7 @@ define('module/angular/services/roomService', [
                 if(roomRef){
                     roomRef.remove();
                 }
+                //clean angular watcher
                 if(movementWatchRef){
                     movementWatchRef();
                 }

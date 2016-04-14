@@ -46,8 +46,6 @@ define('module/game/playState', [
     		stage = new stageController(game);
     		stage.addStageBackground('TableBg');
 
-            console.log(gameConfig);
-
             for(i in gameConfig.objects){
 
                 var obj = gameConfig.objects[i];
