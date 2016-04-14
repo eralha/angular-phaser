@@ -19,4 +19,3 @@ TODOS:
 - add phaser preload
 - add grunt build
 - review scale equations
-- on firebase movement pass object to top
