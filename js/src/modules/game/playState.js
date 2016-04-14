@@ -3,7 +3,7 @@ define('module/game/playState', [
 	], function (stageController){
     
     var module = {};
-    var count, cursors, background, stageGroup, uiService, assetLoaderService, gameService, fireService, spriteToDrag, stage, gameConfig;
+    var count, cursors, background, stageGroup, uiService, assetLoaderService, gameService, roomService, spriteToDrag, stage, gameConfig;
     var stage;
     var drag = true;
     var dragSprite = false;
@@ -18,18 +18,11 @@ define('module/game/playState', [
     		 * TODO: Create angular service that will load a .json file containing all the assets, paths and positions
     		 */
 
-             /*
-    		game.load.image('MainBoard', 'assets/game_board.jpg');
-    		game.load.image('TableBg', 'assets/table_bg.jpg');
-    		game.load.image('token', 'assets/icons_03.png');
-            game.load.image('token2', 'assets/icons_03.png');
-            */
-
             //Getting angular services
             assetLoaderService = game.$injector.get('assetLoaderService');
             uiService = game.$injector.get('uiService');
             gameService = game.$injector.get('gameService');
-            fireService = game.$injector.get('fireService');
+            roomService = game.$injector.get('roomService');
 
             gameConfig = assetLoaderService.getLastLoaded();
 
@@ -74,15 +67,6 @@ define('module/game/playState', [
                 }
             }
 
-            /*
-    		var board = stage.addToStage('MainBoard');
-    		var token = stage.addToStage('token', true);
-            var token2 = stage.addToStage('token2', true);
-
-    		stage.centerObjectToStage(board);
-    		stage.centerObjectToStage(token);
-            */
-
 	  		//Set this stage to ui service stage, we can use it on other places
 	  		gameService.setStage(stage);
 
@@ -111,7 +95,7 @@ define('module/game/playState', [
                 //emit Drag
                 spriteToDrag.emitDrag('dragMove');
 
-                fireService.moveObj(spriteToDrag.obj);
+                roomService.moveObj(spriteToDrag.obj);
 	        }else{
 	        	stage.update();
 	        }
@@ -126,7 +110,7 @@ define('module/game/playState', [
             stage = null;
             uiService = null;
             gameService = null;
-            fireService = null;
+            roomService = null;
             gameConfig = null;
         }
 

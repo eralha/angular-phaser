@@ -1,11 +1,12 @@
-define('module/angular/services/firebase', [
+define('module/angular/services/roomService', [
+    'module/angular/services/assetLoaderService',
     'lib/rxjs.all.min'
     ], function (Rx){
         
-        var module = angular.module('fireService', []);
+        var module = angular.module('roomService', ['assetLoaderService']);
 
-        module.service('fireService', ['$q', '$http', '$filter', '$firebaseArray', 'fireConfig', '$firebaseObject', 'gameService',
-            function($q, $http, $filter, $firebaseArray, fireConfig, $firebaseObject, gameService) {
+        module.service('roomService', ['$q', '$http', '$filter', '$firebaseArray', 'fireConfig', '$firebaseObject', 'gameService', 'assetLoaderService',
+            function($q, $http, $filter, $firebaseArray, fireConfig, $firebaseObject, gameService, assetLoaderService) {
 
             //stores user presence for rooms
             this.roomUserCount = {};
@@ -106,6 +107,7 @@ define('module/angular/services/firebase', [
                 var room = {};
                     room.name = roomName;
                     room.uid = uid;
+                    room.gameData = assetLoaderService.getLastLoaded();
 
                 roomList.$add(room).then(function(ref) {
                   //when this user disconnects from server delete current room

@@ -1,8 +1,8 @@
-define('module/angular/services/saveLoader', [
+define('module/angular/services/assetLoaderService', [
     'lib/rxjs.all.min'
     ], function (Rx){
         
-        var module = angular.module('saveLoader', []);
+        var module = angular.module('assetLoaderService', []);
 
         var sup;
 
@@ -35,7 +35,7 @@ define('module/angular/services/saveLoader', [
 		        return defer.promise;
             }
 
-            this.getLastLoaded = function(path){
+            this.getLastLoaded = function(){
             	return this.data[this.lastPath][0];
             }
 

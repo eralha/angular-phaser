@@ -62,12 +62,12 @@ define('module/angular/controllers', [], function (){
 
 	}]);
 
-	module.controller('roomController', ['$scope', '$filter', 'uiService', 'fireService', function($scope, $filter, uiService, fireService){
+	module.controller('roomController', ['$scope', '$filter', 'uiService', 'roomService', function($scope, $filter, uiService, roomService){
 
-		$scope.roomList = fireService.getRooms();
+		$scope.roomList = roomService.getRooms();
 
 		$scope.userCount = function(key){
-			return fireService.getUserCount(key);
+			return roomService.getUserCount(key);
 		}
 
 		$scope.closeClick = function(proName){
@@ -75,11 +75,11 @@ define('module/angular/controllers', [], function (){
 		}
 
 		$scope.addRoom = function(){
-			fireService.createRoom($scope.roomName);
+			roomService.createRoom($scope.roomName);
 		}
 
 		$scope.joinRoom = function(room){
-			fireService.joinRoom(room.$id);
+			roomService.joinRoom(room.$id);
 		}
 
 	}]);
