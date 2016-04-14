@@ -96,7 +96,7 @@ define('module/angular/services/main', [
 
             this.moveObj = function(asset, props){
                 if(stage){
-                    stage.moveAsset(asset, props);
+                    stage.moveAsset(asset, props, arguments[2]);
                 }
             }
 

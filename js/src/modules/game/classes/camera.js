@@ -53,12 +53,21 @@ define('module/game/classes/camera', [
         bH = stageGroup.height;
     }
 
-    module.prototype.moveAsset = function(assetKey, props){
+    module.prototype.moveAsset = function(assetKey, props, bringToTop){
         for(i in stageGroup.children){
             if(stageGroup.children[i].key == assetKey){
-                stageGroup.children[i].x = props.x;
-                stageGroup.children[i].y = props.y;
+                var asset = stageGroup.children[i];
+                if(asset.x != props.x && asset.y != props.y){
+                    asset.x = props.x;
+                    asset.y = props.y;
+                }else{
+                    asset = null;
+                }
             }
+        }
+
+        if(asset && bringToTop){
+            asset.bringToTop();
         }
     }
 

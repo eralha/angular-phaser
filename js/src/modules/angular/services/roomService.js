@@ -48,7 +48,7 @@ define('module/angular/services/roomService', [
             this.watchMovement = function(){
                 angular.forEach(movementPipe, function(value, key) {
                     if(value.uid != uid){
-                        gameService.moveObj(key, value);
+                        gameService.moveObj(key, value, true);
                     }
                 });
             }
