@@ -1,4 +1,6 @@
-define('module/angular/directives', [], function (){
+define('module/angular/directives', [
+	'module/game/main'
+	], function (gameModule){
     
     var module = angular.module('app.directives', []);
 
@@ -10,7 +12,7 @@ define('module/angular/directives', [], function (){
 		        //console.log($(e).html(), arguments);
 		        return function(scope, element, attrs) {
 
-		          InitGameEngine(scope, $injector, $rootScope);
+		          gameModule.InitGameEngine(scope, $injector, $rootScope);
 
 		        }
 		    }

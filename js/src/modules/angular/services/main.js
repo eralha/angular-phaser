@@ -73,7 +73,9 @@ define('module/angular/services/main', [
             }
 
             this.setState = function(state){
-                game.state.start(state);
+                if(game){
+                    game.state.start(state);
+                }
             }
 
             this.startObjDrag = function(spriteToDrag){
