@@ -41,14 +41,26 @@ define('module/angular/services/roomService', [
             this.moveObj = function(obj){
                 if(!movementPipe){ return; }
 
+                /*-------------
+                Mudar este código para que instancie apenas uma vez cada objecto
+                -------------*/
+                var objMoveRef = new Firebase(fireConfig.objMovement+'/'+moveRef.key()+'/'+obj.key);
+                var objMovePipe = $firebaseObject(objMoveRef);
+
+                    objMovePipe.o = {x: obj.x, y: obj.y, uid: uid};
+                    objMovePipe.$save();
+
+
+                /*
                 movementPipe[obj.key] = {x: obj.x, y: obj.y, uid: uid};
                 movementPipe.$save();
+                */
             }
 
             this.watchMovement = function(){
                 angular.forEach(movementPipe, function(value, key) {
                     if(value.uid != uid){
-                        gameService.moveObj(key, value, true);
+                        gameService.moveObj(key, value.o, true);
                     }
                 });
             }
