@@ -5,8 +5,8 @@ define('module/angular/services/roomService', [
         
         var module = angular.module('roomService', ['assetLoaderService']);
 
-        module.service('roomService', ['$q', '$http', '$filter', '$firebaseArray', 'fireConfig', '$firebaseObject', 'gameService', 'assetLoaderService',
-            function($q, $http, $filter, $firebaseArray, fireConfig, $firebaseObject, gameService, assetLoaderService) {
+        module.service('roomService', ['$q', '$http', '$filter', '$firebaseArray', 'fireConfig', '$firebaseObject', 'gameService', 'assetLoaderService', 'rtcService',
+            function($q, $http, $filter, $firebaseArray, fireConfig, $firebaseObject, gameService, assetLoaderService, rtcService) {
 
             //stores user presence for rooms
             this.roomUserCount = {};
@@ -39,6 +39,16 @@ define('module/angular/services/roomService', [
 
 
             this.moveObj = function(obj){
+
+                /*---- SOCKET IO----*/
+                if(!moveRef){ return; }
+                var o = {x: obj.x, y: obj.y, uid: uid, key: obj.key};
+                    rtcService.emitRoom(moveRef, o);
+                /*----END SOCKET IO----*/
+
+                return; //este return está aqui para anular processamento da firebase
+
+
                 if(!movementPipe){ return; }
 
                 /*-------------
@@ -92,19 +102,28 @@ define('module/angular/services/roomService', [
 
                 currRoomKey = key;
 
-                moveRef = new Firebase(fireConfig.objMovement+'/'+key);
+                //moveRef = new Firebase(fireConfig.objMovement+'/'+key);
+                moveRef = key;
                 roomRef = new Firebase(fireConfig.dataPipe+'/'+roomPresenceLoc+'/'+key+'/'+uid);
 
                 //remove presence of this user from the room presence location
                 roomRef.onDisconnect().remove();
 
                 roomPipe = $firebaseObject(roomRef);
-                movementPipe = $firebaseObject(moveRef);
+                //movementPipe = $firebaseObject(moveRef);
 
                 //add presence to room
                 roomPipe.status = 'online'
                 roomPipe.$save();
 
+                /*---- SOCKETIO ----*/
+                rtcService.joinRoom(key, function(data){
+                    gameService.moveObj(data.key, data, true);
+                });
+                /*---- END SOCKETIO ----*/
+
+                //este return está aqui para anular processamento da firebase
+                return;
                 //wait fot movement data load
                 movementPipe.$loaded().then(function(){
                     //watch for changes in our movement reference

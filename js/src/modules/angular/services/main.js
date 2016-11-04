@@ -105,6 +105,54 @@ define('module/angular/services/main', [
             return this;
         }]);
 
+        
+        module.service('rtcService', ['$q', '$http', '$filter', function($q, $http, $filter) {
+
+            var socket;
+            var sup = this;
+            var roomCallbacks = {};
+
+            this.joinRoom = function(room, callback){
+                roomCallbacks[room] = callback;
+                socket.emit('joinRoom', room);
+            }
+
+            this.leaveRoom = function(room, callback){
+                roomCallbacks[room] = undefined;
+                delete roomCallbacks[room];
+                socket.emit('leaveRoom', room);
+            }
+
+            this.emitRoom = function(room, data){
+                if(!room) { return; }
+                data.room = room;
+                socket.emit('emitRoom', data);
+            }
+
+            if(io){
+                socket = io.connect('https://ersocketio.herokuapp.com/rtc');
+                //socket = io.connect('http://localhost:3000/rtc');
+                socket.on('msg', function (data) {
+                    if(socket.id == data.id){
+                        console.log('returning dont process msg from own socket');
+                        return;
+                    }
+
+                    if(roomCallbacks[data.room]){
+                        roomCallbacks[data.room](data);
+                    }
+                });
+
+                /*
+                this.joinRoom('room1');
+                this.emitRoom('room1', {prop: '1'});
+                */
+                
+            }
+
+            return this;
+        }]);
+
 
     return module;
 
