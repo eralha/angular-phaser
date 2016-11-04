@@ -80,6 +80,8 @@ define('module/angular/services/roomService', [
             }
 
             this.leaveRoom = function(){
+                rtcService.leaveRoom(currRoomKey);
+                
                 currRoomKey = null;
 
                 if(roomRef){
@@ -118,6 +120,10 @@ define('module/angular/services/roomService', [
 
                 /*---- SOCKETIO ----*/
                 rtcService.joinRoom(key, function(data){
+                    if(uid == data.uid){
+                        console.log('returning dont process msg from own socket');
+                        return;
+                    }
                     gameService.moveObj(data.key, data, true);
                 });
                 /*---- END SOCKETIO ----*/

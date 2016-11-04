@@ -114,13 +114,16 @@ define('module/angular/services/main', [
 
             this.joinRoom = function(room, callback){
                 roomCallbacks[room] = callback;
+                socket.on(room, callback);
                 socket.emit('joinRoom', room);
             }
 
-            this.leaveRoom = function(room, callback){
+            this.leaveRoom = function(room){
+                socket.off(room, roomCallbacks[room]);
+                socket.emit('leaveRoom', room);
+
                 roomCallbacks[room] = undefined;
                 delete roomCallbacks[room];
-                socket.emit('leaveRoom', room);
             }
 
             this.emitRoom = function(room, data){
